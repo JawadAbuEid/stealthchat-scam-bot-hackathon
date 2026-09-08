@@ -1,126 +1,142 @@
-# StealthChat — Human-Like Scam-Baiting Bot Behaviour Prototype
+# StealthChat — Defensive Scam-Engagement Behaviour Prototype
 
 **Hackathon Project | Track 2.2: Text-Based Stealth & Bot Identity Protection**  
 **Built solo**
 
 ## Project Overview
 
-Scam-baiting systems are designed to keep scammers engaged long enough to waste their time and gather useful defensive intelligence. A major limitation is that automated agents can reveal themselves through overly fast, polished, or repetitive responses.
+StealthChat is a defensive AI/cybersecurity prototype exploring how scam-engagement bots can produce more natural, less repetitive responses while staying within strict safety constraints. The original hackathon submission focused on reusable prompt tactics, synthetic dialogue examples, trust-signal modelling and believability scoring. This repository now also includes a small reusable Python behaviour engine so the idea can be evaluated outside the notebook.
 
-StealthChat explores a **behaviour layer** for defensive scam-engagement bots: reusable response tactics, human-like trust signals, synthetic dialogue examples, and a lightweight Python prototype for generating more believable conversational behaviour.
-
-> This project is strictly for defensive anti-scam research. All examples are synthetic and no real victims, scammers, identities, credentials, or personal data are used.
+> **Defensive-use only.** All examples are synthetic. This project does not target real users and does not generate real identities, credentials, payment details or deceptive artefacts.
 
 ## Problem
 
-Automated scam-engagement bots can be detected when they:
+Automated scam-engagement systems can become easy to detect when they respond too quickly, repeat the same patterns, sound unnaturally polished or fail to behave like a normal conversational partner. That reduces the usefulness of defensive scam-baiting systems designed to waste scammers' time and gather intelligence in controlled environments.
 
-- respond too quickly or consistently
-- use language that is unnaturally polished
-- repeat predictable patterns
-- fail to ask believable follow-up questions
-- behave unlike a normal person under pressure
+The project asks:
 
-The goal of this project was to explore whether simple text-based behavioural tactics could make defensive bot responses feel more natural while remaining safe and controlled.
+> Can a lightweight behaviour layer make a defensive bot's responses more varied and human-like without sacrificing safety or explainability?
 
 ## What I Built
 
-### 1. Reusable Response Tactics
-Five behaviour patterns were designed for use in an LLM or rule-based conversation pipeline:
+### 1. Reusable behavioural tactics
 
-- `delay` — simulate slower or interrupted responses
+Five tactics are modelled consistently across the notebook and Python module:
+
+- `delay` — simulate interrupted or slower responses
 - `evasive` — avoid immediately answering sensitive requests
-- `reverse_question` — redirect the conversation with a natural follow-up question
-- `casual_noise` — add controlled informal language and small imperfections
+- `reverse_question` — redirect naturally with a follow-up question
+- `casual_noise` — introduce controlled informal language and imperfections
 - `soft_refusal` — resist risky requests without abruptly ending the interaction
 
-### 2. Synthetic Dialogue Dataset
-Created fully synthetic examples across three common scam scenarios:
+### 2. Synthetic dialogue dataset
 
-- investment / fake trading scams
-- romance scams
-- fake technical-support scams
+The original notebook includes fully synthetic examples covering investment, romance and fake technical-support scam scenarios. Each example is labelled with the tactic used, trust signals and a believability score, making the qualitative design easier to compare and audit.
 
-Each example records the response tactic, human-like trust signals, and a believability score for comparison.
+### 3. Trust-signal framework
 
-### 3. Trust-Signal Framework
-The prototype models conversational behaviours such as:
+The project models behaviours such as delayed responses, informal language, minor corrections, lightweight personal context, reverse questions and hedging. The notebook also checks that trust-signal labels used in examples match the defined framework.
 
-- delayed responses
-- informal language and emojis
-- minor typos or corrections
-- lightweight personal context
-- reverse questions
-- hedging and softening language
+### 4. Reusable behaviour engine
 
-The notebook also considers the risk of overusing these behaviours, since excessive noise can make a response less believable rather than more human.
+The portfolio refactor adds [`src/stealthchat.py`](src/stealthchat.py), which turns the hackathon concept into reusable code. It includes:
 
-### 4. Python Behaviour Prototype
-Implemented a lightweight reply engine that demonstrates how tactic selection and controlled conversational noise could fit into a larger anti-scam bot architecture.
+- reproducible tactic-based reply generation
+- response variation that avoids immediately repeating the same reply
+- simulated response-delay metadata
+- automatic trust-signal inference
+- an explainable **heuristic suspicion-risk score** from 0 to 1
+- reproducible multi-turn synthetic evaluation
 
-This is intentionally a **proof of concept**, not a production deception system and not a full LLM integration.
+The suspicion score is intentionally simple and transparent. It is **not** a trained detector and should not be presented as a real-world performance metric.
 
-### 5. Analysis & Visualisation
-The project compares tactics and trust signals using visual analysis to identify which combinations appear most believable in the synthetic evaluation set.
+### 5. Reproducible demo and tests
 
-## Technical Approach
+[`examples/demo.py`](examples/demo.py) runs all tactics in a synthetic sequence and reports reply text, simulated delay, detected trust signals and heuristic risk. [`tests/test_stealthchat.py`](tests/test_stealthchat.py) checks reproducibility, tactic validation and risk-score bounds.
+
+## Technical Flow
 
 ```text
-Scam scenario
-     ↓
-Select behavioural tactic
-     ↓
-Apply trust signals / controlled noise
-     ↓
-Generate prototype response
-     ↓
-Score synthetic believability
-     ↓
-Compare tactics and visualise results
+Synthetic scam scenario
+        ↓
+Choose behaviour tactic
+        ↓
+Generate safe response variation
+        ↓
+Simulate timing metadata
+        ↓
+Infer trust signals
+        ↓
+Calculate explainable heuristic risk
+        ↓
+Evaluate behaviour across turns
 ```
-
-## Tech Stack
-
-**Python • pandas • matplotlib • seaborn • Jupyter Notebook**
 
 ## Repository Structure
 
 ```text
 stealthchat-scam-bot-hackathon/
 ├── README.md
+├── requirements.txt
+├── src/
+│   └── stealthchat.py
+├── examples/
+│   └── demo.py
+├── tests/
+│   └── test_stealthchat.py
 ├── notebooks/
 │   └── stealthchat_prototype.ipynb
 └── docs/
     └── StealthChat.pdf
 ```
 
-- [`notebooks/stealthchat_prototype.ipynb`](notebooks/stealthchat_prototype.ipynb) — full prototype, synthetic data, trust-signal framework, simulation and analysis
-- [`docs/StealthChat.pdf`](docs/StealthChat.pdf) — hackathon pitch deck
+The notebook preserves the original hackathon work, while `src/` is the cleaner reusable portfolio implementation.
+
+## Running the Project
+
+```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+python examples/demo.py
+python -m unittest discover tests
+```
+
+## Tech Stack
+
+**Python · pandas · NumPy · matplotlib · seaborn · Jupyter Notebook**
+
+The reusable behaviour engine itself uses only Python's standard library; the data-analysis dependencies are used by the notebook.
 
 ## Safety & Ethics
 
 The project was designed with defensive-use constraints from the beginning:
 
 - all conversations and examples are synthetic
-- no real personal information is used
-- no realistic IDs, credentials, screenshots or financial details are generated
-- the prototype does not target real users
-- the intended use case is anti-scam research and scam-baiting systems operated in controlled environments
+- no real victims, scammers or personal information are used
+- no realistic identities, credentials, financial details or screenshots are generated
+- the prototype does not contact or target real users
+- the intended setting is controlled anti-scam research
+- the code is a behaviour prototype, not a production deception system
 
 ## Limitations
 
-- believability scores are based on a small synthetic dataset rather than real-world controlled trials
-- the reply engine is a behavioural proof of concept rather than a deployed LLM agent
-- tactics would need stronger guardrails, monitoring and evaluation before any real defensive deployment
+- believability scores in the hackathon notebook are based on a small synthetic dataset
+- the new suspicion-risk score is a hand-designed heuristic, not a learned model
+- simulated delay is metadata only; the module does not actually pause or interact with messaging systems
+- the project does not include a production LLM, real-world scam interaction or deployment
+- real deployment would require stronger safety guardrails, monitoring, legal review and evaluation
 
 ## Future Improvements
 
-- integrate the behaviour layer with an LLM through a controlled API
-- add automated safety filters and conversation-state tracking
-- evaluate responses using a larger synthetic benchmark
-- measure engagement duration and detection rate in a controlled simulation
-- deploy a small demo interface for portfolio demonstration
+- integrate the behaviour layer with an LLM in a controlled sandbox
+- add conversation-state tracking and safety filters
+- create a larger synthetic evaluation benchmark
+- compare rule-based and model-based response strategies
+- measure repetition, response diversity and safety automatically
+- build a small portfolio demo interface
 
-## Why This Project Matters
+## What This Demonstrates
 
-StealthChat demonstrates practical thinking beyond model training: **problem framing, synthetic-data design, behavioural system design, safety considerations, prototyping and evaluation**. It also shows how AI can be applied to a real cybersecurity problem while keeping responsible-use constraints explicit.
+StealthChat demonstrates more than prompt writing. It shows **problem framing, synthetic-data design, defensive AI thinking, reusable Python development, explainable heuristics, testing, safety constraints and technical communication** in a cybersecurity-related use case.
